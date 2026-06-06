@@ -1,0 +1,332 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Home Cleaning | HomeGenie</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#eef2f7;
+}
+
+.header{
+background:#1e293b;
+color:white;
+padding:15px 40px;
+font-size:22px;
+font-weight:bold;
+display:flex;
+justify-content:space-between;
+}
+
+.title{
+padding:25px 40px;
+font-size:22px;
+font-weight:600;
+}
+
+.services{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+padding:0 40px 40px 40px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+text-align:center;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.desc{
+color:#666;
+font-size:14px;
+margin-bottom:10px;
+}
+
+.price{
+color:#16a34a;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.book-btn{
+background:#2563eb;
+color:white;
+border:none;
+padding:8px 15px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.cart-controls{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+margin-top:10px;
+}
+
+.cart-controls button{
+width:30px;
+height:30px;
+border:none;
+border-radius:50%;
+background:#2563eb;
+color:white;
+font-size:18px;
+cursor:pointer;
+}
+
+.cart-controls span{
+font-weight:bold;
+}
+
+</style>
+
+<script>
+
+let cartCount=0;
+
+function startCart(id,service,price){
+
+document.getElementById("book"+id).style.display="none";
+document.getElementById("cart"+id).style.display="flex";
+
+document.getElementById("count"+id).innerText=1;
+
+cartCount++;
+document.getElementById("cartCount").innerText=cartCount;
+
+fetch("addToCart.jsp",{
+method:"POST",
+headers:{
+"Content-Type":"application/x-www-form-urlencoded"
+},
+body:"service_name="+encodeURIComponent(service)+"&price="+price
+});
+
+}
+
+function add(service,price,id){
+
+let count=document.getElementById("count"+id);
+let val=parseInt(count.innerText);
+
+val++;
+count.innerText=val;
+
+cartCount++;
+document.getElementById("cartCount").innerText=cartCount;
+
+fetch("addToCart.jsp",{
+method:"POST",
+headers:{
+"Content-Type":"application/x-www-form-urlencoded"
+},
+body:"service_name="+encodeURIComponent(service)+"&price="+price
+});
+
+}
+
+function minus(service,id){
+
+let count=document.getElementById("count"+id);
+let val=parseInt(count.innerText);
+
+if(val>1){
+
+val--;
+count.innerText=val;
+
+cartCount--;
+document.getElementById("cartCount").innerText=cartCount;
+
+}else{
+
+document.getElementById("cart"+id).style.display="none";
+document.getElementById("book"+id).style.display="inline-block";
+
+cartCount--;
+if(cartCount<0) cartCount=0;
+
+document.getElementById("cartCount").innerText=cartCount;
+
+}
+
+fetch("removeFromCart.jsp",{
+method:"POST",
+headers:{
+"Content-Type":"application/x-www-form-urlencoded"
+},
+body:"service_name="+encodeURIComponent(service)
+});
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<span>🧞 HomeGenie</span>
+
+<a href="cart.jsp" style="color:white;text-decoration:none;">
+🛒 Cart (<span id="cartCount">0</span>)
+</a>
+
+</div>
+
+<div class="title">
+✨ Home Cleaning Services
+</div>
+
+<div class="services">
+
+
+<!-- Kitchen Cleaning -->
+
+<div class="card">
+
+<h3>Kitchen Cleaning</h3>
+
+<div class="desc">Deep kitchen cleaning service</div>
+
+<div class="price">₹ 499</div>
+
+<button class="book-btn"
+id="book1"
+onclick="startCart(1,'Kitchen Cleaning','499')">
+
+Book Now
+
+</button>
+
+<div class="cart-controls" id="cart1" style="display:none;">
+
+<button onclick="minus('Kitchen Cleaning',1)">-</button>
+
+<span id="count1">0</span>
+
+<button onclick="add('Kitchen Cleaning','499',1)">+</button>
+
+</div>
+
+</div>
+
+
+<!-- Bathroom Cleaning -->
+
+<div class="card">
+
+<h3>Bathroom Cleaning</h3>
+
+<div class="desc">Complete bathroom sanitization</div>
+
+<div class="price">₹ 399</div>
+
+<button class="book-btn"
+id="book2"
+onclick="startCart(2,'Bathroom Cleaning','399')">
+
+Book Now
+
+</button>
+
+<div class="cart-controls" id="cart2" style="display:none;">
+
+<button onclick="minus('Bathroom Cleaning',2)">-</button>
+
+<span id="count2">0</span>
+
+<button onclick="add('Bathroom Cleaning','399',2)">+</button>
+
+</div>
+
+</div>
+
+
+<!-- Window Cleaning -->
+
+<div class="card">
+
+<h3>Window Cleaning</h3>
+
+<div class="desc">Professional window cleaning</div>
+
+<div class="price">₹ 299</div>
+
+<button class="book-btn"
+id="book3"
+onclick="startCart(3,'Window Cleaning','299')">
+
+Book Now
+
+</button>
+
+<div class="cart-controls" id="cart3" style="display:none;">
+
+<button onclick="minus('Window Cleaning',3)">-</button>
+
+<span id="count3">0</span>
+
+<button onclick="add('Window Cleaning','299',3)">+</button>
+
+</div>
+
+</div>
+
+
+<!-- Full Home Cleaning -->
+
+<div class="card">
+
+<h3>Full Home Cleaning</h3>
+
+<div class="desc">Complete house deep cleaning</div>
+
+<div class="price">₹ 999</div>
+
+<button class="book-btn"
+id="book4"
+onclick="startCart(4,'Full Home Cleaning','999')">
+
+Book Now
+
+</button>
+
+<div class="cart-controls" id="cart4" style="display:none;">
+
+<button onclick="minus('Full Home Cleaning',4)">-</button>
+
+<span id="count4">0</span>
+
+<button onclick="add('Full Home Cleaning','999',4)">+</button>
+
+</div>
+
+</div>
+
+<a href="chatbot.jsp" style="position:fixed;bottom:25px;right:25px;text-decoration:none;">
+<button class="chatbot-btn" style="width:60px;height:60px;border-radius:50%;background:#2563eb;color:white;border:none;font-size:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 5px 15px rgba(0,0,0,0.3);">🧞</button>
+</a>
+</div>
+
+</body>
+
+</html>
